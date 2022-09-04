@@ -1,11 +1,41 @@
-# Start your own "Can of Books" App
+# read file
+ Auther : monther
 
-This repository has starter code to begin work on creating your own online bookshelf.
+ ---
+ ## Overview
+ This server is connected to a mongoDB that contains data of books
 
-## What can books do?
+ ---
 
-Books are life-changing. They have the power to enlighten, educate, entertain, heal, and help us grow. Build out this code base to create an web app to track what books have impacted you, and what's recommended to read next.
 
-## Use this template
 
-Clone this repo to your own account with the green "Use this template" button. Then, add any collaborators. Now you are ready to start adding features! Deploy your site to let the world know which books have had the greatest impact on you, and what's recommended. Enjoy!
+
+ Name of feature: MongoDB__________________________
+
+Estimate of time needed to complete: 30 mins___
+
+Start time: 7:20___
+
+Finish time: 7:40___
+
+Actual time needed to complete: 20mins___
+
+Name of feature: server sending data to the db______________________
+
+Estimate of time needed to complete: 30 mins___
+
+Start time: 7:40___
+
+Finish time: 8:10_
+
+Actual time needed to complete: 30 mins___
+
+Name of feature: rendering the data into the browser____________________________
+
+Estimate of time needed to complete: 30 mins___
+
+Start time: 8:20___
+
+Finish time: 8:50___
+
+Actual time needed to complete: 30 mins___
