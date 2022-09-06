@@ -5,11 +5,11 @@ const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
-const app = express();
+const app = (express.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 3001;
-mongoose.connect('mongodb://localhost:27017/books' , {useNewUrlParser :true,
+mongoose.connect('mongodb+srv://monthertamimi:1234@cluster0.5sdac6r.mongodb.net/?retryWrites=true&w=majority' , {useNewUrlParser :true,
 useUnifiedTopology:true });
 const bookSchema = new mongoose.Schema({
   title: String,
@@ -37,11 +37,12 @@ async function seedData (){
       
       
       })
+      await  firstBook.save();
+      await  secondBook.save();
+      await  thirdBook.save();
     }
 
-    await  firstBook.save();
-    await  secondBook.save();
-    await  thirdBook.save();
+   // seedData();
    
    
     app.get('/Books', getTheBestBooks );   
@@ -63,4 +64,65 @@ app.get('/', (request, response) => {
   response.send('test request received')
 
 })
+
+
+
+app.post('/addBook',addBookHandler);
+app.delete('/deleteBook/:id',deleteBookHandler);
+app.get('/Books', getTheBestBooks );
+function getTheBestBooks(req,res){
+  Book.find({},(err,result) =>{
+    if(err){
+      console.log(err)
+    }
+    else 
+    {
+      res.send(result)
+    }
+  })
+}
+
+
+async function addBookHandler(req,res) {
+  console.log(req.body);
+  
+  const {title,description,states} = req.body;
+  console.log(title);
+  console.log(description);
+  console.log(states); //finding the element in the console just to test 
+  await Book.create({
+    title : title,
+      description : description,
+      states:states
+
+  });
+
+
+  Book.find({},(err,result) =>{
+    if(err){
+      console.log(err)
+    }
+    else 
+    {
+      res.send(result)
+    }
+  })
+
+  
+  function deleteBookHandler(req,res) {
+    const BookId = req.params.id;
+    Book.deleteOne({_id:BookId},(err,result)=>{
+      Book.find({},(err,result) =>{
+        if(err){
+          console.log(err)
+        }
+        else 
+        {
+          res.send(result)
+        }
+      })
+      
+    })
+  }
+}
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
