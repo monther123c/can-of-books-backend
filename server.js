@@ -4,20 +4,23 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-
-const app = (express.json());
+const app = express();
+ app .use(express.json());
 app.use(cors());
 
 const PORT = process.env.PORT || 3001;
 mongoose.connect('mongodb+srv://monthertamimi:1234@cluster0.5sdac6r.mongodb.net/?retryWrites=true&w=majority' , {useNewUrlParser :true,
 useUnifiedTopology:true });
+
 const bookSchema = new mongoose.Schema({
   title: String,
   description:String,
   states:String,
 });
+
 const Book = mongoose.model('books', bookSchema);
-// idont read books so i will search in google 
+// idont read books so i will search in google
+
 async function seedData (){
   const firstBook = new Book({
   title : "The Maid by Nita Prose",
@@ -70,6 +73,8 @@ app.get('/', (request, response) => {
 app.post('/addBook',addBookHandler);
 app.delete('/deleteBook/:id',deleteBookHandler);
 app.get('/Books', getTheBestBooks );
+app.put('/updateBook/:id',updateBookHandler);
+
 function getTheBestBooks(req,res){
   Book.find({},(err,result) =>{
     if(err){
@@ -123,6 +128,24 @@ async function addBookHandler(req,res) {
       })
       
     })
+  }
+  async function updateBookHandler(req,res) {
+    console.log("done")
+    const BookId = req.params.id;
+    const {title,description,states} = req.body;
+  Book.findByIdAndUpdate(BookId,{title,description,states},(err,result)=>{
+    Book.find({},(err,result) =>{
+      if(err){
+        console.log(err)
+      }
+      else 
+      {
+        res.send(result)
+      }
+    })
+  })
+  
+  
   }
 }
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
