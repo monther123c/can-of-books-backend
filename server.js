@@ -45,7 +45,7 @@ async function seedData (){
       await  thirdBook.save();
     }
 
-   // seedData();
+    seedData();
    
    
     app.get('/Books', getTheBestBooks );   
@@ -76,7 +76,8 @@ app.get('/Books', getTheBestBooks );
 app.put('/updateBook/:id',updateBookHandler);
 
 function getTheBestBooks(req,res){
-  Book.find({},(err,result) =>{
+  const name = req.query.name;
+  Book.find({name:name},(err,result) =>{
     if(err){
       console.log(err)
     }
@@ -87,23 +88,23 @@ function getTheBestBooks(req,res){
   })
 }
 
-
 async function addBookHandler(req,res) {
   console.log(req.body);
   
-  const {title,description,states} = req.body;
+  const {title,description,states,name} = req.body;
   console.log(title);
   console.log(description);
   console.log(states); //finding the element in the console just to test 
   await Book.create({
     title : title,
       description : description,
-      states:states
+      states:states,
+      name:name
 
   });
 
 
-  Book.find({},(err,result) =>{
+  Book.find({name:name},(err,result) =>{
     if(err){
       console.log(err)
     }
@@ -112,29 +113,13 @@ async function addBookHandler(req,res) {
       res.send(result)
     }
   })
-
+}
   
-  function deleteBookHandler(req,res) {
-    const BookId = req.params.id;
-    Book.deleteOne({_id:BookId},(err,result)=>{
-      Book.find({},(err,result) =>{
-        if(err){
-          console.log(err)
-        }
-        else 
-        {
-          res.send(result)
-        }
-      })
-      
-    })
-  }
-  async function updateBookHandler(req,res) {
-    console.log("done")
-    const BookId = req.params.id;
-    const {title,description,states} = req.body;
-  Book.findByIdAndUpdate(BookId,{title,description,states},(err,result)=>{
-    Book.find({},(err,result) =>{
+function deleteBookHandler(req,res) {
+  const BookId = req.params.id;
+  const name = req.query.name;
+  Book.deleteOne({_id:BookId},(err,result)=>{
+    Book.find({name:name},(err,result) =>{
       if(err){
         console.log(err)
       }
@@ -143,9 +128,28 @@ async function addBookHandler(req,res) {
         res.send(result)
       }
     })
+    
   })
+
+}
+async function updateBookHandler(req,res) {
+  
+  console.log("done")
+  const BookId = req.params.id;
+  const {title,description,states,name} = req.body;
+Book.findByIdAndUpdate(BookId,{title,description,states,name},(err,result)=>{
+  Book.find({name:name},(err,result) =>{
+    if(err){
+      console.log(err)
+    }
+    else 
+    {
+      res.send(result)
+    }
+  })
+})
+
   
   
-  }
 }
 app.listen(PORT, () => console.log(`listening on ${PORT}`));
